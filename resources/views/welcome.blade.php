@@ -44,7 +44,35 @@ $counter = 1;
 $packs = 5;
 $price = 1.99;
 
+$products = [
+  'Toffee' => 2.99,
+  'Mints' => 1.99,
+  'Fudge' => 3.49,
+];
+
+function write_logo() {
+  echo '<img src= "img/logo.png" alt="Logo"/>';
+}
+
+function write_copyright_notice() {
+  $year = date('Y');
+  echo '&copy; ' . $year;
+}
+
+function create_copyright_notice() {
+  $year = date('Y');
+  $message = '&copy ' . $year;
+  return $message;
+}
+
+function calculate_cost($price, $quantity) {
+  return $price * $quantity;
+}
+
+$total = calculate_cost(3,5);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
@@ -54,6 +82,7 @@ $price = 1.99;
     @vite('resources/css/app.css')
   </head>
   <body>
+		<?php include '../resources/views/includes/header.php' ?>
     <p class="text-blue-500">hello <?= $name ?></p>
     <p><?= $greeting ?></p>
     <p>save <?= $saving ?></p>
@@ -82,5 +111,29 @@ $price = 1.99;
         }
       ?>
     </p>
+    <h2>Price List</h2>
+    <table>
+      <tr>
+        <th>Item</th>
+        <th>Price</th>
+      </tr>
+      <?php foreach ($products as $item => $price) {?>
+        <tr>
+          <td><?= $item ?></td>
+          <td>$<?= $price ?></td>
+        </tr>
+       <?php } ?>
+    </table>
+
   </body>
+	<?php 
+		// include '/Users/jameswu/repo/zeta/resources/views/includes/footer.php' 
+		include '../resources/views/includes/footer.php' 
+	
+	?>
+  <footer>
+    <?php write_logo(); ?>
+    <?php write_copyright_notice(); ?>
+    <?= create_copyright_notice(); ?>
+  </footer>
 </html>
