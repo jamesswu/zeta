@@ -1,139 +1,71 @@
 <?php
 
-$name = "ivy";
-$day = 'Monday';
-$greeting = "hello";
+$logged_in = true;
 
-if ($name !== '') {
-  $greeting = 'welcome back, ' . $name . '.';
+if ($logged_in == false) {
+	header('Location: login.php');
+	exit;
 }
 
-$stock = 5;
+// $cities = [
+// 	'London' => '48 Store Street, WC1E 7BS',
+// 	'Sydney' => '151 Oxford Street, 2021',
+// 	'NYC' => '1242 7th Street, 10492',
+// ];
 
-if ($stock > 0) {
-  $message = 'in stock';
-} else {
-  $message = 'sold out';
-}
+// $city = $_GET['city'] ?? '';
+// $valid = array_key_exists($city, $cities);
+// if (!$valid) {
+// 	http_response_code(404);
+// 	header('Location: page-not-found.php');
+// 	exit;
+// }
+// $address = $cities[$city];
 
-$offer = [
-  'item' => 'Chocolate',
-  'qty' => 5,
-  'price' => 5,
-  'discount' => 4,
-];
-
-$usual_price = $offer['qty'] * $offer['price'];
-$offer_price = $offer['qty'] * $offer['discount'];
-$saving = $usual_price - $offer_price;
-
-switch ($day) {
-  case 'Monday':
-    $offerstr = '20% off chocolates';
-    break;
-  case "Tuesday":
-    $offerstr = '20% off mints';
-    break;
-  default:
-    $offerstr = 'Buy three packs, get one free';
-    break;
-}
-
-
-$counter = 1;
-$packs = 5;
-$price = 1.99;
-
-$products = [
-  'Toffee' => 2.99,
-  'Mints' => 1.99,
-  'Fudge' => 3.49,
-];
-
-function write_logo() {
-  echo '<img src= "img/logo.png" alt="Logo"/>';
-}
-
-function write_copyright_notice() {
-  $year = date('Y');
-  echo '&copy; ' . $year;
-}
-
-function create_copyright_notice() {
-  $year = date('Y');
-  $message = '&copy ' . $year;
-  return $message;
-}
-
-function calculate_cost($price, $quantity) {
-  return $price * $quantity;
-}
-
-$total = calculate_cost(3,5);
+ 
+	// if ($_SERVER['REQUEST_METHID'] == 'POST') {
+	// 	$term = $_POST['term'];
+	// 	echo 'you searched for ' . htmlspecialchars($term);
+	// }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
-    @vite('resources/css/app.css')
-  </head>
-  <body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Laravel</title>
+		@vite('resources/css/app.css')
+	</head>
+	<body>
 		<?php include '../resources/views/includes/header.php' ?>
-    <p class="text-blue-500">hello <?= $name ?></p>
-    <p><?= $greeting ?></p>
-    <p>save <?= $saving ?></p>
+		<h2>sanitizing example</h2>
+		<a href="xss-1.php?msg=<script src=js/bad.js></script>">LINK TO DEMONSTRATE XSS</a>
+		<?php $message1 = $_GET['msg'] ?? 'Click link at top of page'; ?> 
+		<?php
+			function html_escape(string $string): string {
+				return htmlspecialchars($string,ENT_QUOTES|ENT_HTML5, 'UTF-8', true);
+			}
+			$message = $_GET['msg'] ?? 'click the link above';
+		?>
+		<p><?= html_escape($message) ?></p>
 
-    <p><?= $offer['item']?> is <?= $message = ($offer['qty'] > 0) ? 'in stock' : 'sold out' ?></p>
-    <p><?= $day?></p>
-    <p><?= $offerstr ?></p>
-    <p>
-      <?php
-        while ($counter <= $packs) {
-          echo $counter;
-          echo ' packs cost $';
-          echo $price * $counter;
-          echo '<br>';
-          $counter++;
-        }
-      ?>
-    </p>
-    <p>
-      <?php
-        for ($i = 10; $i <= 100; $i = $i+10) {
-          echo $i;
-          echo ' packs cost $';
-          echo $price*$i;
-          echo '<br>';
-        }
-      ?>
-    </p>
-    <h2>Price List</h2>
-    <table>
-      <tr>
-        <th>Item</th>
-        <th>Price</th>
-      </tr>
-      <?php foreach ($products as $item => $price) {?>
-        <tr>
-          <td><?= $item ?></td>
-          <td>$<?= $price ?></td>
-        </tr>
-       <?php } ?>
-    </table>
-
-  </body>
+		<br>
+		<h2>form example</h2>
+		<form action="index.php" method="POST">
+			<p>Email: <input class="border rounded-md" type="email" name="email"></p>
+			<p>Age: <input class="border rounded-md" type="number" name="age"></p>
+			<p>
+				<input type="checkbox" name="terms" value="true">
+				I agree to the terms and conditions.
+			</p>
+			<input type="submit" value="Save">
+		</form>
+		<pre><?php var_dump($_POST); ?></pre>
+	</body>
 	<?php 
 		// include '/Users/jameswu/repo/zeta/resources/views/includes/footer.php' 
 		include '../resources/views/includes/footer.php' 
-	
 	?>
-  <footer>
-    <?php write_logo(); ?>
-    <?php write_copyright_notice(); ?>
-    <?= create_copyright_notice(); ?>
-  </footer>
 </html>
